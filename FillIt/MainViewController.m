@@ -7,28 +7,27 @@
 //
 
 #import "MainViewController.h"
+#import "Grid.h"
 
 @interface MainViewController ()
-
+@property Grid *grid;
 @end
 @implementation MainViewController
 
-static NSArray *nums = nil;
-int currentNumber;
+static int startPos = 0;
 
-- (void)resetGrid {
+- (void)clearBoard {
 	for (int i = 0; i < 25; i++) {
 		((UITextField *)[_cells objectAtIndex:i]).text = @"";
+        [((UITextView *)[_cells objectAtIndex:i])setBackgroundColor :[UIColor clearColor]];
 	}
-	if (nums == nil) {
-		nums = [NSArray arrayWithObjects:@"", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", @"12", @"13", @"14", @"15", @"16", @"17", @"18", @"19", @"20", @"21", @"22", @"23", @"24", @"25", nil];
-	}
-    currentNumber = 1;
 }
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[self resetGrid];
+	[_bannerView setHidden:YES];
+	_grid = [Grid new];
+	[self clearBoard];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -69,6 +68,7 @@ int currentNumber;
  * and hide it again when bannerView:didFailToReceiveAdWithError: is called.
  */
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+	[_bannerView setHidden:NO];
 }
 
 /*!
@@ -82,6 +82,7 @@ int currentNumber;
  * @see ADError for a list of possible error codes.
  */
 - (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
+	[_bannerView setHidden:YES];
 }
 
 /*!
@@ -113,13 +114,85 @@ int currentNumber;
 - (void)bannerViewActionDidFinish:(ADBannerView *)banner {
 }
 
+- (BOOL)isValidChoice:(int)proposedChoice {
+	if ([_grid currentNumber] == 0) {
+		[_grid incrementCurrentNumber];
+		[_grid setCellValueToCurrentNumber:proposedChoice];
+		return YES;
+	}
+	int choices[4] = { 0, 0, 0, 0 };
+	int nbrOfChoices = [_grid getChoices:choices];
+	for (int i = 0; i < nbrOfChoices; i++) {
+		if (choices[i] == proposedChoice) {
+			return YES;
+		}
+	}
+	return NO;
+}
+
+- (void)highLightChoices {
+	int choices[4] = { 0, 0, 0, 0 };
+	int nbrOfChoices = [_grid getChoices:choices];
+	for (int i = 0; i < nbrOfChoices; i++) {
+		[((UITextView *)[_cells objectAtIndex:choices[i]])setBackgroundColor :[UIColor yellowColor]];
+	}
+}
+
+- (void)clearChoices {
+	int choices[4] = { 0, 0, 0, 0 };
+	int nbrOfChoices = [_grid getChoices:choices];
+	for (int i = 0; i < nbrOfChoices; i++) {
+		[((UITextView *)[_cells objectAtIndex:choices[i]])setBackgroundColor :[UIColor clearColor]];
+	}
+}
+
 - (IBAction)onTap:(id)sender {
-    int cellNum = (int)[sender tag] - 1;
-	((UITextView *)[_cells objectAtIndex:cellNum]).text = [nums objectAtIndex:currentNumber++];
+	int cellNum = (int)[sender tag] - 1;
+	if (![self isValidChoice:cellNum]) {
+		return;
+	}
+	((UITextView *)[_cells objectAtIndex:cellNum]).text = [_grid getCurrentNumString];
+	[self clearChoices];
+	[_grid setCellValueToCurrentNumber:cellNum];
+	[self highLightChoices];
+	[_grid incrementCurrentNumber];
+}
+
+- (void)findSolutions {
+	if (startPos > 24)
+		startPos = 0;
+	int iterations = 0;
+	do {
+		++iterations;
+		[_grid reset];
+		[self clearBoard];
+	}
+	while (![self simulate]);
+	[_scoreLabel setText:[NSString stringWithFormat:@"%i", iterations]];
+	++startPos;
 }
 
 - (IBAction)startGame:(id)sender {
-    [self resetGrid];
+	[_grid reset];
+	[self clearBoard];
+    //    [self findSolutions];
+}
+
+- (BOOL)simulate {
+	int next = startPos; //[_grid nextRndCell];
+	[_grid setCellValueToCurrentNumber:next];
+	((UITextView *)[_cells objectAtIndex:next]).text = [_grid getCurrentNumString];
+	[_grid incrementCurrentNumber];
+	while ([_grid currentNumber] <= 25) {
+		next = [_grid nextRndCell];
+		if (next == -1) {
+			return NO;
+		}
+		[_grid setCellValueToCurrentNumber:next];
+		((UITextView *)[_cells objectAtIndex:next]).text = [_grid getCurrentNumString];
+		[_grid incrementCurrentNumber];
+	}
+	return YES;
 }
 
 @end

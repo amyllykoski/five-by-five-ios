@@ -13,5 +13,7 @@
 @property (strong, nonatomic) IBOutletCollection(UITextField) NSArray *cells;
 - (IBAction)onTap:(id)sender;
 - (IBAction)startGame:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 
 @end
