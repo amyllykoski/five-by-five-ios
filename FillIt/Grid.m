@@ -15,6 +15,7 @@ int board[5][5];
 static NSArray *nums = nil;
 int currentNumber;
 int latestPosition;
+int startPosition;
 
 - (id)init {
 	[self reset];
@@ -36,6 +37,7 @@ int latestPosition;
     
 	currentNumber = 0;
 	latestPosition = 0;
+    startPosition = 0;
 }
 
 - (NSString *)getCurrentNumString {
@@ -67,6 +69,9 @@ int latestPosition;
 }
 
 - (void)setCellValueToCurrentNumber:(int)position {
+    if(currentNumber == 1) {
+        startPosition = position;
+    }
 	assert((position >= 0) && (position < 25));
 	latestPosition = position;
 	board[position / 5][position % 5] = currentNumber;
@@ -74,6 +79,10 @@ int latestPosition;
 
 - (int)currentNumber {
 	return currentNumber;
+}
+
+-(int) getStartPosition {
+    return startPosition;
 }
 
 - (int)rnd:(int)lo hi:(int)hi {

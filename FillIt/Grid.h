@@ -22,5 +22,6 @@
 - (int)isSet:(int)x y:(int)y;
 - (int)nextRndCell;
 - (int)getChoices:(int *)choices;
+-(int) getStartPosition;
 
 @end

@@ -11,6 +11,8 @@
 
 @interface MainViewController ()
 @property Grid *grid;
+@property bool showHints;
+@property bool appStarts;
 @end
 @implementation MainViewController
 
@@ -30,6 +32,12 @@ static int startPos = 0;
 	[self clearBoard];
 }
 
+- (void)initPrefs {
+	NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+	_showHints = [prefs boolForKey:@"showHints"];
+	_appStarts = [prefs boolForKey:@"appStarts"];
+}
+
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 }
@@ -38,6 +46,7 @@ static int startPos = 0;
 
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller {
 	[self dismissViewControllerAnimated:YES completion:nil];
+	[self initPrefs];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -134,7 +143,9 @@ static int startPos = 0;
 	int choices[4] = { 0, 0, 0, 0 };
 	int nbrOfChoices = [_grid getChoices:choices];
 	for (int i = 0; i < nbrOfChoices; i++) {
-		[((UITextView *)[_cells objectAtIndex:choices[i]])setBackgroundColor :[UIColor yellowColor]];
+		if (_showHints) {
+			[((UITextView *)[_cells objectAtIndex:choices[i]])setBackgroundColor :[UIColor yellowColor]];
+		}
 	}
 	return nbrOfChoices;
 }
@@ -152,29 +163,47 @@ static int startPos = 0;
 	[UIView beginAnimations:@"Flip" context:NULL];
 	[UIView setAnimationDuration:duration];
 	[UIView setAnimationDelegate:self];
-	[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:((UITextView *)[_cells objectAtIndex:cellNum]) cache:NO];
+	[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
+	                       forView:((UITextView *)[_cells objectAtIndex:cellNum]) cache:NO];
 	[UIView setAnimationDelegate:self];
 	[UIView commitAnimations];
 }
 
+- (void)analyzeMove:(int)cellNum {
+    if ([self highLightChoices] == 0) { // Finished, not completed
+		if ([_grid currentNumber] != 25) {
+			[((UITextView *)[_cells objectAtIndex:cellNum])setBackgroundColor :[UIColor redColor]];
+			[self flipCell:cellNum duration:3.0];
+		}
+		else {  // Completed
+			[self saveCompletedGame];
+		}
+	}
+	else {  // Moving on
+		[_grid incrementCurrentNumber];
+	}
+}
+
 - (IBAction)onTap:(id)sender {
 	int cellNum = (int)[sender tag] - 1;
+    
 	if (![self isValidChoice:cellNum]) {
 		return;
 	}
     
 	[self flipCell:cellNum duration:0.40];
-    
 	[self clearChoices];
 	[_grid setCellValueToCurrentNumber:cellNum];
-    [_scoreLabel setText:[NSString stringWithFormat:@"%i", [_grid currentNumber]]];
-	if ([self highLightChoices] == 0) {
-		[((UITextView *)[_cells objectAtIndex:cellNum])setBackgroundColor :[UIColor redColor]];
-        [self flipCell:cellNum duration:3.0];
-	}
-	else {
-		[_grid incrementCurrentNumber];
-	}
+	[_scoreLabel setText:[NSString stringWithFormat:@"%i", [_grid currentNumber]]];
+	[self analyzeMove:cellNum];
+}
+
+- (void)saveCompletedGame {
+	NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+	int completedGames = (int)[prefs integerForKey:@"completedGames"];
+	completedGames |= 1 << [_grid getStartPosition];
+	[prefs setInteger:completedGames forKey:@"completedGames"];
+	[prefs synchronize];
 }
 
 // Internal solution finder
@@ -192,9 +221,20 @@ static int startPos = 0;
 	++startPos;
 }
 
+- (void)chooseFirstCell {
+	[_grid incrementCurrentNumber];
+	int cellNum = [_grid nextRndCell];
+	[_grid setCellValueToCurrentNumber:cellNum];
+	((UITextView *)[_cells objectAtIndex:cellNum]).text = [_grid getCurrentNumString];
+	[_grid incrementCurrentNumber];
+}
+
 - (IBAction)startGame:(id)sender {
 	[_grid reset];
 	[self clearBoard];
+	if (_appStarts) {
+		[self chooseFirstCell];
+	}
 	//    [self findSolutions];
 }
 

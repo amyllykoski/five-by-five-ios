@@ -19,5 +19,9 @@
 @property (weak, nonatomic) id <FlipsideViewControllerDelegate> delegate;
 
 - (IBAction)done:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+@property (weak, nonatomic) IBOutlet UISwitch *hintSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *appStartSwitch;
+@property (strong, nonatomic) IBOutletCollection(UITextField) NSArray *games;
 
 @end
