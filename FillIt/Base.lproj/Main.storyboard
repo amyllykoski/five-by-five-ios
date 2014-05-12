@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoDark" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jqg-sy-dxO">
+                            <button opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jqg-sy-dxO">
                                 <rect key="frame" x="262" y="389" width="22" height="22"/>
                                 <state key="normal">
                                     <color key="titleColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -643,6 +643,7 @@
                                                 <action selector="done:" destination="kIf-nA-PKG" id="j28-pm-V55"/>
                                             </connections>
                                         </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="About" id="2vR-KC-0oZ"/>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -828,7 +829,7 @@
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RL5-Lk-KNK">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RL5-Lk-KNK">
                                 <rect key="frame" x="132" y="359" width="57" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -853,6 +854,36 @@
                             <constraint firstItem="hED-2o-FLw" firstAttribute="trailing" secondItem="tg4-aq-CMy" secondAttribute="trailing" id="cVE-3m-sGp"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="appStartSwitch" destination="klo-0o-WSG" id="CsP-Ym-8Vy"/>
+                        <outlet property="hintSwitch" destination="Xuv-kk-01Z" id="0oN-VG-NLX"/>
+                        <outlet property="timeLabel" destination="RL5-Lk-KNK" id="ug3-9Z-JCm"/>
+                        <outletCollection property="games" destination="aY2-Rz-zha" id="dm4-5S-Fgj"/>
+                        <outletCollection property="games" destination="1Hv-n8-hxn" id="8pX-Rt-2sO"/>
+                        <outletCollection property="games" destination="gVL-GX-F0a" id="XEc-EN-AwU"/>
+                        <outletCollection property="games" destination="Jfz-BP-RCP" id="T6n-SQ-SnE"/>
+                        <outletCollection property="games" destination="8A3-5L-sVV" id="yNP-h2-rCN"/>
+                        <outletCollection property="games" destination="lJF-5T-2ps" id="7Am-wj-znU"/>
+                        <outletCollection property="games" destination="8O0-vA-ez5" id="TbP-e1-qPd"/>
+                        <outletCollection property="games" destination="Sdf-8Z-Oft" id="hrN-b0-wAH"/>
+                        <outletCollection property="games" destination="FJj-9h-O5l" id="aGP-RI-sdT"/>
+                        <outletCollection property="games" destination="hC6-wr-Cua" id="vXw-ee-niE"/>
+                        <outletCollection property="games" destination="EcL-DV-goF" id="Fej-Hn-ufJ"/>
+                        <outletCollection property="games" destination="L4D-Av-Le6" id="HDp-MP-0UQ"/>
+                        <outletCollection property="games" destination="IE0-Pa-HN6" id="qR4-oA-RVc"/>
+                        <outletCollection property="games" destination="Ge2-av-GuT" id="J5a-yQ-52R"/>
+                        <outletCollection property="games" destination="xL8-TU-jnC" id="wpU-mf-EO5"/>
+                        <outletCollection property="games" destination="DfD-Vc-wO6" id="ryh-rd-CzQ"/>
+                        <outletCollection property="games" destination="jQK-pL-lTN" id="01T-1e-aDV"/>
+                        <outletCollection property="games" destination="e6C-aF-RQb" id="sEP-59-Egl"/>
+                        <outletCollection property="games" destination="pHe-ag-Bqv" id="rek-r1-4kR"/>
+                        <outletCollection property="games" destination="0Lq-IN-4US" id="Ndc-8a-wWU"/>
+                        <outletCollection property="games" destination="1Ze-rf-TkM" id="Abi-lG-QxX"/>
+                        <outletCollection property="games" destination="8mv-th-w8d" id="h6n-wY-lOF"/>
+                        <outletCollection property="games" destination="A5x-EG-3xU" id="UdS-iw-S6y"/>
+                        <outletCollection property="games" destination="Yus-Dc-eFu" id="bBl-dS-Sbe"/>
+                        <outletCollection property="games" destination="aui-AI-Fs2" id="AJv-Dm-FQW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xlJ-1o-FvB" sceneMemberID="firstResponder"/>
             </objects>
