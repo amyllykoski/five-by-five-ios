@@ -7,6 +7,7 @@
 //
 
 #import "FlipsideViewController.h"
+#import <QuartzCore/QuartzCore.h>
 #import <iAd/iAd.h>
 
 @interface MainViewController : UIViewController <FlipsideViewControllerDelegate, ADBannerViewDelegate>
@@ -15,5 +16,6 @@
 - (IBAction)startGame:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
 @end

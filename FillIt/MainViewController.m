@@ -19,13 +19,13 @@ static int startPos = 0;
 - (void)clearBoard {
 	for (int i = 0; i < 25; i++) {
 		((UITextField *)[_cells objectAtIndex:i]).text = @"";
-        [((UITextView *)[_cells objectAtIndex:i])setBackgroundColor :[UIColor clearColor]];
+		[((UITextView *)[_cells objectAtIndex:i])setBackgroundColor :[UIColor clearColor]];
 	}
 }
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[_bannerView setHidden:YES];
+	[_bannerView setHidden:NO];
 	_grid = [Grid new];
 	[self clearBoard];
 }
@@ -130,12 +130,13 @@ static int startPos = 0;
 	return NO;
 }
 
-- (void)highLightChoices {
+- (int)highLightChoices {
 	int choices[4] = { 0, 0, 0, 0 };
 	int nbrOfChoices = [_grid getChoices:choices];
 	for (int i = 0; i < nbrOfChoices; i++) {
 		[((UITextView *)[_cells objectAtIndex:choices[i]])setBackgroundColor :[UIColor yellowColor]];
 	}
+	return nbrOfChoices;
 }
 
 - (void)clearChoices {
@@ -146,18 +147,37 @@ static int startPos = 0;
 	}
 }
 
+- (void)flipCell:(int)cellNum duration:(float)duration {
+	((UITextView *)[_cells objectAtIndex:cellNum]).text = [_grid getCurrentNumString];
+	[UIView beginAnimations:@"Flip" context:NULL];
+	[UIView setAnimationDuration:duration];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:((UITextView *)[_cells objectAtIndex:cellNum]) cache:NO];
+	[UIView setAnimationDelegate:self];
+	[UIView commitAnimations];
+}
+
 - (IBAction)onTap:(id)sender {
 	int cellNum = (int)[sender tag] - 1;
 	if (![self isValidChoice:cellNum]) {
 		return;
 	}
-	((UITextView *)[_cells objectAtIndex:cellNum]).text = [_grid getCurrentNumString];
+    
+	[self flipCell:cellNum duration:0.40];
+    
 	[self clearChoices];
 	[_grid setCellValueToCurrentNumber:cellNum];
-	[self highLightChoices];
-	[_grid incrementCurrentNumber];
+    [_scoreLabel setText:[NSString stringWithFormat:@"%i", [_grid currentNumber]]];
+	if ([self highLightChoices] == 0) {
+		[((UITextView *)[_cells objectAtIndex:cellNum])setBackgroundColor :[UIColor redColor]];
+        [self flipCell:cellNum duration:3.0];
+	}
+	else {
+		[_grid incrementCurrentNumber];
+	}
 }
 
+// Internal solution finder
 - (void)findSolutions {
 	if (startPos > 24)
 		startPos = 0;
@@ -175,7 +195,7 @@ static int startPos = 0;
 - (IBAction)startGame:(id)sender {
 	[_grid reset];
 	[self clearBoard];
-    //    [self findSolutions];
+	//    [self findSolutions];
 }
 
 - (BOOL)simulate {
