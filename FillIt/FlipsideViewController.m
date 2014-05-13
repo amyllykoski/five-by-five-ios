@@ -23,10 +23,8 @@
 -(void) initUI {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     bool showHints = [prefs boolForKey:@"showHints"];
-    bool appStarts = [prefs boolForKey:@"appStarts"];
     NSInteger bestTime = [prefs integerForKey:@"bestTime"];
     [_hintSwitch setOn:showHints];
-    [_appStartSwitch setOn:appStarts];
     [_timeLabel setText:[NSString stringWithFormat:@"%li", (long)bestTime]];
     int completedGames = (int)[prefs integerForKey:@"completedGames"];
     [self populateGameGrid:completedGames];
@@ -53,9 +51,7 @@
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     bool showHints = [_hintSwitch isOn];
-    bool appStarts = [_appStartSwitch isOn];
     [prefs setBool:showHints forKey:@"showHints" ];
-    [prefs setBool:appStarts forKey:@"appStarts"];
     [prefs synchronize];
     [self.delegate flipsideViewControllerDidFinish:self];
 }

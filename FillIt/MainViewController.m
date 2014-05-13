@@ -12,7 +12,8 @@
 @interface MainViewController ()
 @property Grid *grid;
 @property bool showHints;
-@property bool appStarts;
+@property NSTimer *timer;
+@property int seconds;
 @end
 @implementation MainViewController
 
@@ -27,15 +28,30 @@ static int startPos = 0;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	[self initPrefs];
+	[self clearBoard];
 	[_bannerView setHidden:NO];
 	_grid = [Grid new];
-	[self clearBoard];
+	_seconds = 0;
+}
+
+- (NSTimer *)createTimer {
+	return [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerTicked:) userInfo:nil repeats:YES];
+}
+
+- (void)timerTicked:(NSTimer *)timer {
+	NSLog(@"timer");
+	_seconds++;
+	[_timeLabel setText:[NSString stringWithFormat:@"%i", _seconds]];
+}
+
+- (void)stopTimer {
+	[_timer invalidate];
 }
 
 - (void)initPrefs {
 	NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
 	_showHints = [prefs boolForKey:@"showHints"];
-	_appStarts = [prefs boolForKey:@"appStarts"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -170,12 +186,14 @@ static int startPos = 0;
 }
 
 - (void)analyzeMove:(int)cellNum {
-    if ([self highLightChoices] == 0) { // Finished, not completed
+	if ([self highLightChoices] == 0) { // Finished, not completed
 		if ([_grid currentNumber] != 25) {
+			[self stopTimer];
 			[((UITextView *)[_cells objectAtIndex:cellNum])setBackgroundColor :[UIColor redColor]];
 			[self flipCell:cellNum duration:3.0];
 		}
 		else {  // Completed
+			[self stopTimer];
 			[self saveCompletedGame];
 		}
 	}
@@ -186,7 +204,9 @@ static int startPos = 0;
 
 - (IBAction)onTap:(id)sender {
 	int cellNum = (int)[sender tag] - 1;
-    
+	if (![_timer isValid]) {
+		_timer = [self createTimer];
+	}
 	if (![self isValidChoice:cellNum]) {
 		return;
 	}
@@ -232,9 +252,8 @@ static int startPos = 0;
 - (IBAction)startGame:(id)sender {
 	[_grid reset];
 	[self clearBoard];
-	if (_appStarts) {
-		[self chooseFirstCell];
-	}
+	_seconds = 0;
+	[_timeLabel setText:@"0"];
 	//    [self findSolutions];
 }
 
