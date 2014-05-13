@@ -14,6 +14,7 @@
 @property bool showHints;
 @property NSTimer *timer;
 @property int seconds;
+@property bool isStarted;
 @end
 @implementation MainViewController
 
@@ -33,19 +34,21 @@ static int startPos = 0;
 	[_bannerView setHidden:NO];
 	_grid = [Grid new];
 	_seconds = 0;
+	_isStarted = NO;
 }
 
 - (NSTimer *)createTimer {
+	_isStarted = YES;
 	return [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerTicked:) userInfo:nil repeats:YES];
 }
 
 - (void)timerTicked:(NSTimer *)timer {
-	NSLog(@"timer");
 	_seconds++;
 	[_timeLabel setText:[NSString stringWithFormat:@"%i", _seconds]];
 }
 
 - (void)stopTimer {
+	_isStarted = NO;
 	[_timer invalidate];
 }
 
@@ -192,9 +195,10 @@ static int startPos = 0;
 			[((UITextView *)[_cells objectAtIndex:cellNum])setBackgroundColor :[UIColor redColor]];
 			[self flipCell:cellNum duration:3.0];
 		}
-		else {  // Completed
+		else {  // Finished and completed
 			[self stopTimer];
 			[self saveCompletedGame];
+			[self updateBestTime];
 		}
 	}
 	else {  // Moving on
@@ -203,10 +207,15 @@ static int startPos = 0;
 }
 
 - (IBAction)onTap:(id)sender {
+	if (!_isStarted) {
+		return;  // TODO: toast
+	}
+    
 	int cellNum = (int)[sender tag] - 1;
 	if (![_timer isValid]) {
 		_timer = [self createTimer];
 	}
+    
 	if (![self isValidChoice:cellNum]) {
 		return;
 	}
@@ -223,6 +232,15 @@ static int startPos = 0;
 	int completedGames = (int)[prefs integerForKey:@"completedGames"];
 	completedGames |= 1 << [_grid getStartPosition];
 	[prefs setInteger:completedGames forKey:@"completedGames"];
+	[prefs synchronize];
+}
+
+- (void)updateBestTime {
+	NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+	int currentBestTime = (int)[prefs integerForKey:@"bestTime"];
+	if (_seconds < currentBestTime || currentBestTime == 0) {
+		[prefs setInteger:_seconds forKey:@"bestTime"];
+	}
 	[prefs synchronize];
 }
 
@@ -250,9 +268,13 @@ static int startPos = 0;
 }
 
 - (IBAction)startGame:(id)sender {
+	if (_isStarted) {
+		[self stopTimer];
+	}
 	[_grid reset];
 	[self clearBoard];
 	_seconds = 0;
+	_isStarted = YES;
 	[_timeLabel setText:@"0"];
 	//    [self findSolutions];
 }
