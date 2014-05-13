@@ -24,6 +24,7 @@
 		E4E35644191EF65500FEBEC4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E4E35642191EF65500FEBEC4 /* InfoPlist.strings */; };
 		E4E35646191EF65500FEBEC4 /* FillItTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E4E35645191EF65500FEBEC4 /* FillItTests.m */; };
 		E4E35650191EF91000FEBEC4 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E3564F191EF91000FEBEC4 /* iAd.framework */; };
+		E4FD23CB1921CC3000F7345A /* Graphics.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4FD23CA1921CC3000F7345A /* Graphics.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		E4E35643191EF65500FEBEC4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E4E35645191EF65500FEBEC4 /* FillItTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FillItTests.m; sourceTree = "<group>"; };
 		E4E3564F191EF91000FEBEC4 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		E4FD23CA1921CC3000F7345A /* Graphics.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Graphics.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 				E4E3562F191EF65500FEBEC4 /* FlipsideViewController.h */,
 				E4E35630191EF65500FEBEC4 /* FlipsideViewController.m */,
 				E4E35632191EF65500FEBEC4 /* Images.xcassets */,
+				E4FD23CA1921CC3000F7345A /* Graphics.xcassets */,
 				E4E3561E191EF65500FEBEC4 /* Supporting Files */,
 				E47518C1192010D600352A67 /* Grid.h */,
 				E47518C2192010D600352A67 /* Grid.m */,
@@ -244,6 +247,7 @@
 			files = (
 				E4E35633191EF65500FEBEC4 /* Images.xcassets in Resources */,
 				E4E35622191EF65500FEBEC4 /* InfoPlist.strings in Resources */,
+				E4FD23CB1921CC3000F7345A /* Graphics.xcassets in Resources */,
 				E4E3562B191EF65500FEBEC4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
