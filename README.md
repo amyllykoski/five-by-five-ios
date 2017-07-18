@@ -1,4 +1,5 @@
-#Five-by-five IOS Game
+
+# Five-by-five IOS Game
 
 The objective of the game is to fill the 5 by 5 grid with numbers from 1 to 25. You can start from any cell, and there are two rules each move has to follow:
 
@@ -8,6 +9,6 @@ The app gives hints about the valid next moves showing question marks on valid t
 
 When there's no choices for next move (all potential target cells are filled), the game is over.
 
-#Motivation
+# Motivation
 
 This is an iOS implementation of the Five-by-Five game I also made for Android. To get a taste of Objective-C.
